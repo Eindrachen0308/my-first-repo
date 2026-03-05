@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCandidates, createCandidate, getSlackConfig, sendSlackNotification } from "@/lib/store";
+import { parseJsonBody, jsonError, validateCandidateInput } from "@/lib/validation";
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
 
   const search = params.get("search");
   if (search) {
-    const q = search.toLowerCase();
+    const q = search.toLowerCase().slice(0, 200);
     results = results.filter(
       (c) => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q)
     );
@@ -26,8 +27,13 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const candidate = createCandidate(body);
+  const body = await parseJsonBody(request);
+  if (!body) return jsonError("Invalid JSON or payload too large", 400);
+
+  const result = validateCandidateInput(body);
+  if (!result.valid) return jsonError(result.errors.join(", "), 400);
+
+  const candidate = createCandidate(result.data);
 
   const config = getSlackConfig();
   if (config.enabled && config.notifyOnNewCandidate) {

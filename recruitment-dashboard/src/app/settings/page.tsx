@@ -5,22 +5,38 @@ import { SlackConfig } from "@/types";
 
 export default function SettingsPage() {
   const [config, setConfig] = useState<SlackConfig | null>(null);
+  const [webhookUrl, setWebhookUrl] = useState("");
+  const [webhookChanged, setWebhookChanged] = useState(false);
   const [saved, setSaved] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/slack").then((r) => r.json()).then(setConfig);
+    fetch("/api/slack").then((r) => r.json()).then((data) => {
+      setConfig(data);
+      setWebhookUrl(data.hasWebhookUrl ? data.webhookUrl : "");
+    });
   }, []);
 
   if (!config) return <div className="p-8 text-gray-500">読み込み中...</div>;
 
   const handleSave = async () => {
+    const payload: Record<string, unknown> = {
+      channel: config.channel,
+      enabled: config.enabled,
+      notifyOnStageChange: config.notifyOnStageChange,
+      notifyOnNewCandidate: config.notifyOnNewCandidate,
+      notifyOnNewJob: config.notifyOnNewJob,
+    };
+    if (webhookChanged) {
+      payload.webhookUrl = webhookUrl;
+    }
     await fetch("/api/slack", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(config),
+      body: JSON.stringify(payload),
     });
     setSaved(true);
+    setWebhookChanged(false);
     setTimeout(() => setSaved(false), 3000);
   };
 
@@ -70,8 +86,8 @@ export default function SettingsPage() {
             <input
               type="url"
               placeholder="https://hooks.slack.com/services/..."
-              value={config.webhookUrl}
-              onChange={(e) => setConfig({ ...config, webhookUrl: e.target.value })}
+              value={webhookUrl}
+              onChange={(e) => { setWebhookUrl(e.target.value); setWebhookChanged(true); }}
               className="w-full border rounded-lg px-3 py-2 text-sm"
             />
           </div>
