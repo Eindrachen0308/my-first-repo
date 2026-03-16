@@ -78,6 +78,29 @@ export interface SlackConfig {
   notifyOnNewJob: boolean;
 }
 
+export type TemplateCategory = "メール" | "タイムライン";
+
+export interface TemplateVersion {
+  id: string;
+  version: number;
+  subject: string;
+  body: string;
+  changeNote: string;
+  createdAt: string;
+}
+
+export interface MessageTemplate {
+  id: string;
+  name: string;
+  category: TemplateCategory;
+  subject: string;
+  body: string;
+  currentVersion: number;
+  versions: TemplateVersion[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface DashboardMetrics {
   totalCandidates: number;
   activeCandidates: number;

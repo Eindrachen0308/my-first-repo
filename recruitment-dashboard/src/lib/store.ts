@@ -1,4 +1,4 @@
-import { Candidate, Job, SlackConfig, StatusChange, SelectionStage, PIPELINE_STAGES } from "@/types";
+import { Candidate, Job, SlackConfig, StatusChange, SelectionStage, PIPELINE_STAGES, MessageTemplate, TemplateVersion, TemplateCategory } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 
 // In-memory store (would be replaced by a database in production)
@@ -242,6 +242,181 @@ export async function sendSlackNotification(message: string): Promise<boolean> {
     console.error("Slack notification failed");
     return false;
   }
+}
+
+// Template operations
+let templates: MessageTemplate[] = [];
+
+function initSampleTemplates() {
+  if (templates.length > 0) return;
+
+  const now = new Date().toISOString();
+  const sampleTemplates: MessageTemplate[] = [
+    {
+      id: uuidv4(),
+      name: "面接日程調整",
+      category: "メール",
+      subject: "【{{company}}】面接日程のご案内",
+      body: "{{candidate_name}} 様\n\nこの度は{{job_title}}にご応募いただき、誠にありがとうございます。\n書類選考の結果、ぜひ面接にお進みいただきたくご連絡いたしました。\n\n下記の日程でご都合の良い日時をお知らせください。\n\n・{{date_option_1}}\n・{{date_option_2}}\n・{{date_option_3}}\n\n何卒よろしくお願いいたします。",
+      currentVersion: 1,
+      versions: [],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: uuidv4(),
+      name: "内定通知",
+      category: "メール",
+      subject: "【{{company}}】内定のご連絡",
+      body: "{{candidate_name}} 様\n\n選考の結果、{{candidate_name}}様に内定をお出しすることとなりました。\n心よりお祝い申し上げます。\n\n入社条件等の詳細につきましては、改めてご連絡させていただきます。\nご不明点がございましたらお気軽にお問い合わせください。",
+      currentVersion: 1,
+      versions: [],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: uuidv4(),
+      name: "選考進捗メモ",
+      category: "タイムライン",
+      subject: "{{stage}}の結果",
+      body: "【評価】{{rating}}\n【所感】\n{{comment}}\n【次のアクション】\n{{next_action}}",
+      currentVersion: 1,
+      versions: [],
+      createdAt: now,
+      updatedAt: now,
+    },
+  ];
+
+  // Initialize version 1 for each template
+  sampleTemplates.forEach((t) => {
+    t.versions = [
+      {
+        id: uuidv4(),
+        version: 1,
+        subject: t.subject,
+        body: t.body,
+        changeNote: "初期バージョン",
+        createdAt: t.createdAt,
+      },
+    ];
+  });
+
+  templates = sampleTemplates;
+}
+
+initSampleTemplates();
+
+export function getTemplates(category?: TemplateCategory): MessageTemplate[] {
+  if (category) {
+    return templates.filter((t) => t.category === category);
+  }
+  return [...templates];
+}
+
+export function getTemplate(id: string): MessageTemplate | undefined {
+  return templates.find((t) => t.id === id);
+}
+
+export function createTemplate(data: {
+  name: string;
+  category: TemplateCategory;
+  subject: string;
+  body: string;
+}): MessageTemplate {
+  const now = new Date().toISOString();
+  const versionId = uuidv4();
+  const template: MessageTemplate = {
+    id: uuidv4(),
+    name: data.name,
+    category: data.category,
+    subject: data.subject,
+    body: data.body,
+    currentVersion: 1,
+    versions: [
+      {
+        id: versionId,
+        version: 1,
+        subject: data.subject,
+        body: data.body,
+        changeNote: "初期バージョン",
+        createdAt: now,
+      },
+    ],
+    createdAt: now,
+    updatedAt: now,
+  };
+  templates.push(template);
+  return template;
+}
+
+export function updateTemplate(
+  id: string,
+  data: { name?: string; subject?: string; body?: string; changeNote?: string }
+): MessageTemplate | undefined {
+  const template = templates.find((t) => t.id === id);
+  if (!template) return undefined;
+
+  const now = new Date().toISOString();
+  const contentChanged =
+    (data.subject !== undefined && data.subject !== template.subject) ||
+    (data.body !== undefined && data.body !== template.body);
+
+  if (data.name !== undefined) template.name = data.name;
+
+  if (contentChanged) {
+    const newVersion = template.currentVersion + 1;
+    const newSubject = data.subject ?? template.subject;
+    const newBody = data.body ?? template.body;
+
+    template.versions.push({
+      id: uuidv4(),
+      version: newVersion,
+      subject: newSubject,
+      body: newBody,
+      changeNote: data.changeNote || `v${newVersion}に更新`,
+      createdAt: now,
+    });
+
+    template.subject = newSubject;
+    template.body = newBody;
+    template.currentVersion = newVersion;
+  }
+
+  template.updatedAt = now;
+  return template;
+}
+
+export function restoreTemplateVersion(id: string, versionNumber: number): MessageTemplate | undefined {
+  const template = templates.find((t) => t.id === id);
+  if (!template) return undefined;
+
+  const version = template.versions.find((v) => v.version === versionNumber);
+  if (!version) return undefined;
+
+  const now = new Date().toISOString();
+  const newVersionNum = template.currentVersion + 1;
+
+  template.versions.push({
+    id: uuidv4(),
+    version: newVersionNum,
+    subject: version.subject,
+    body: version.body,
+    changeNote: `v${versionNumber}から復元`,
+    createdAt: now,
+  });
+
+  template.subject = version.subject;
+  template.body = version.body;
+  template.currentVersion = newVersionNum;
+  template.updatedAt = now;
+
+  return template;
+}
+
+export function deleteTemplate(id: string): boolean {
+  const len = templates.length;
+  templates = templates.filter((t) => t.id !== id);
+  return templates.length < len;
 }
 
 // Metrics

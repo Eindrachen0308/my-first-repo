@@ -7,6 +7,7 @@ const navItems = [
   { href: "/dashboard", label: "ダッシュボード", icon: "📊" },
   { href: "/candidates", label: "候補者管理", icon: "👥" },
   { href: "/jobs", label: "求人管理", icon: "💼" },
+  { href: "/templates", label: "テンプレート", icon: "📝" },
   { href: "/settings", label: "設定", icon: "⚙️" },
 ];
 
