@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>株式会社LayerX</title>
-  <meta name="description" content="すべての経済活動を、デジタル化する。LayerXはAI SaaS事業「バクラク」「Ai Workforce」、AI DX事業を提供しています。">
+  <title>wizOnChain株式会社 | AIに仕事をさせよう</title>
+  <meta name="description" content="wizOnChainは、AIエージェントを業務に自然に組み込む仕組みを設計・構築し、真の業務効率化を実現します。">
 
   <!-- OGP -->
-  <meta property="og:title" content="株式会社LayerX">
-  <meta property="og:description" content="すべての経済活動を、デジタル化する。">
+  <meta property="og:title" content="wizOnChain株式会社 | AIに仕事をさせよう">
+  <meta property="og:description" content="AIエージェントを業務に自然に組み込む仕組みを設計・構築。AIの速さと人間の品質管理で、安心して使えるプロダクトを届けます。">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://layerx.co.jp/">
-  <meta property="og:site_name" content="株式会社LayerX">
+  <meta property="og:url" content="https://www.wizonchain.com/">
+  <meta property="og:site_name" content="wizOnChain株式会社">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="src/css/variables.css">
@@ -30,25 +30,22 @@
   <!-- ===== HEADER ===== -->
   <header class="header" role="banner">
     <div class="header__inner">
-      <a href="/" class="header__logo" aria-label="LayerX ホーム">
-        <!-- Logo: Replace with actual SVG -->
-        <svg width="120" height="28" viewBox="0 0 120 28" fill="none" aria-hidden="true">
-          <rect width="28" height="28" rx="4" fill="#2d3047"/>
-          <text x="36" y="20" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#2d3047">LayerX</text>
-        </svg>
+      <a href="/" class="header__logo" aria-label="wizOnChain ホーム">
+        <span class="header__logo-mark">W</span>
+        <span>wizOnChain</span>
       </a>
 
       <!-- Desktop Navigation -->
       <nav class="header__nav" aria-label="メインナビゲーション">
         <ul class="header__nav-list">
-          <li><a href="/about" class="header__nav-link">私たちについて</a></li>
-          <li><a href="/business" class="header__nav-link">事業内容</a></li>
-          <li><a href="/news" class="header__nav-link">ニュース</a></li>
-          <li><a href="/careers" class="header__nav-link">採用情報</a></li>
+          <li><a href="#services" class="header__nav-link">サービス</a></li>
+          <li><a href="#approach" class="header__nav-link">アプローチ</a></li>
+          <li><a href="#news" class="header__nav-link">ニュース</a></li>
+          <li><a href="#company" class="header__nav-link">会社概要</a></li>
         </ul>
       </nav>
 
-      <a href="/contact" class="btn btn--primary btn--small header__cta">お問い合わせ</a>
+      <a href="#contact" class="btn btn--primary btn--small header__cta">お問い合わせ</a>
 
       <!-- Mobile Menu Button -->
       <button class="header__menu-btn" aria-label="メニューを開く" aria-expanded="false">
@@ -61,100 +58,155 @@
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" aria-label="モバイルナビゲーション">
-    <a href="/about" class="mobile-menu__link">私たちについて</a>
-    <a href="/business" class="mobile-menu__link">事業内容</a>
-    <a href="/news" class="mobile-menu__link">ニュース</a>
-    <a href="/careers" class="mobile-menu__link">採用情報</a>
-    <a href="/contact" class="mobile-menu__link">お問い合わせ</a>
+    <a href="#services" class="mobile-menu__link">サービス</a>
+    <a href="#approach" class="mobile-menu__link">アプローチ</a>
+    <a href="#news" class="mobile-menu__link">ニュース</a>
+    <a href="#company" class="mobile-menu__link">会社概要</a>
+    <a href="#contact" class="mobile-menu__link">お問い合わせ</a>
   </div>
 
   <main>
     <!-- ===== HERO SECTION ===== -->
     <section class="hero">
       <div class="hero__bg" aria-hidden="true">
-        <div class="hero__bg-layer"></div>
-        <div class="hero__bg-layer"></div>
-        <div class="hero__bg-layer"></div>
+        <div class="hero__bg-grid"></div>
+        <div class="hero__bg-orb hero__bg-orb--1"></div>
+        <div class="hero__bg-orb hero__bg-orb--2"></div>
+        <div class="hero__bg-orb hero__bg-orb--3"></div>
       </div>
       <div class="hero__content">
-        <h1 class="hero__title">すべての経済活動を、<br>デジタル化する。</h1>
+        <div class="hero__badge">
+          <span class="hero__badge-dot"></span>
+          AI Agent Solutions
+        </div>
+        <h1 class="hero__title">
+          <span class="hero__title-accent">AIに仕事を</span><br>させよう。
+        </h1>
         <p class="hero__subtitle">
-          仕事や暮らしの中にある摩擦が解消され、それぞれの創造力が発揮されている。
-          そんな希望あふれる優しいデジタル社会を、未来に残していくために。
+          AIエージェントを開発するだけでなく、誰もが意識することなく
+          自然に業務へ組み込める「仕組み」を設計・構築します。
         </p>
-      </div>
-    </section>
-
-    <!-- ===== MISSION SECTION ===== -->
-    <section class="section section--lg mission fade-up">
-      <div class="container">
-        <p class="mission__lead">
-          ⼈類の未来をより良くする。
-        </p>
-        <p class="mission__text">
-          そのために私たちは、テクノロジーの可能性を探求し、
-          経済活動における複雑で⼤きな課題に挑む。
-          ソフトウェアや機械学習の力によって、人々の行動を変え、社会課題を解決する。
-          そのために、複数事業・プロダクトを同時並行的に展開する
-          「コンパウンド・スタートアップ」としての挑戦を続けています。
-        </p>
-        <div style="text-align: center; margin-top: var(--space-xl);">
-          <a href="/about" class="btn--more">私たちについて詳しく</a>
+        <div class="hero__actions">
+          <a href="#services" class="btn btn--primary">サービスを見る</a>
+          <a href="#contact" class="btn btn--outline">お問い合わせ</a>
         </div>
       </div>
     </section>
 
-    <!-- ===== BUSINESS SECTION ===== -->
-    <section class="section section--gray fade-up">
+    <!-- ===== VISION SECTION ===== -->
+    <section class="section section--lg vision fade-up">
+      <div class="container">
+        <p class="vision__lead">
+          全ての人がパーソナルデータベースを<br>持つ時代を創る。
+        </p>
+        <p class="vision__text">
+          AIの圧倒的なスピードを活かしながら、人間のチームがしっかりと品質をコントロールし、
+          安心して使える製品を届ける。AI研究、事業開発、技術実装の
+          各分野のトップランナーがビジネスを支えます。
+        </p>
+        <div style="text-align: center; margin-top: var(--space-xl);">
+          <a href="#approach" class="btn--more">アプローチを詳しく</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SERVICES SECTION ===== -->
+    <section id="services" class="section section--gray fade-up">
       <div class="container">
         <div class="section-header">
-          <span class="section-header__label">Business</span>
+          <span class="section-header__label">Services</span>
           <h2 class="section-header__title">事業内容</h2>
           <p class="section-header__description">
-            ソフトウェアの力で日本の社会課題を解決し、
-            人々の創造力がより発揮されるプロダクトを提供しています。
+            AIエージェントとブロックチェーン技術を核に、
+            次世代のデジタル体験を創出するサービスを提供しています。
           </p>
         </div>
 
         <div class="grid grid--3">
-          <!-- Card 1: バクラク -->
-          <article class="biz-card fade-up">
-            <div class="biz-card__icon">📋</div>
-            <h3 class="biz-card__title">バクラク</h3>
-            <p class="biz-card__description">
-              稟議・経費精算・法人カード・請求書受取・請求書発行・勤怠管理等を効率化するAIクラウドサービス。
-              バックオフィス業務に特化したAIエージェントも提供。
+          <!-- Card 1: AI Agent -->
+          <article class="service-card fade-up" data-delay="1">
+            <div class="service-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M16 14H8a4 4 0 0 0-4 4v2h16v-2a4 4 0 0 0-4-4z"/><circle cx="12" cy="6" r="1"/></svg>
+            </div>
+            <span class="service-card__tag">AI Agent</span>
+            <h3 class="service-card__title">AIエージェント構築</h3>
+            <p class="service-card__description">
+              AIエージェントを誰もが意識することなく自然に業務へ組み込める「仕組み」を設計・構築。
+              戦略立案から品質管理、安全性確保まで一貫してサポートします。
             </p>
-            <a href="/business#bakuraku" class="biz-card__link">詳しく見る</a>
+            <a href="#contact" class="service-card__link">詳しく見る</a>
           </article>
 
-          <!-- Card 2: Fintech -->
-          <article class="biz-card fade-up">
-            <div class="biz-card__icon">💎</div>
-            <h3 class="biz-card__title">Fintech事業</h3>
-            <p class="biz-card__description">
-              三井物産デジタル・アセットマネジメントとして、
-              デジタルネイティブなアセットマネジメント会社を目指す合弁事業。
+          <!-- Card 2: Mintice -->
+          <article class="service-card fade-up" data-delay="2">
+            <div class="service-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </div>
+            <span class="service-card__tag">Digital Goods</span>
+            <h3 class="service-card__title">Mintice</h3>
+            <p class="service-card__description">
+              SoulBound Tokens（SBTs）を活用した、転売不可能なデジタル記念グッズプラットフォーム。
+              イベントやエンタメコンテンツ向けの新しい体験を提供します。
             </p>
-            <a href="/business#fintech" class="biz-card__link">詳しく見る</a>
+            <a href="#contact" class="service-card__link">詳しく見る</a>
           </article>
 
-          <!-- Card 3: Ai Workforce -->
-          <article class="biz-card fade-up">
-            <div class="biz-card__icon">🤖</div>
-            <h3 class="biz-card__title">Ai Workforce</h3>
-            <p class="biz-card__description">
-              大規模言語モデル（LLM）関連技術を活用し、
-              ワークフロー構築やナレッジ共有等の業務支援を行うAIプラットフォーム。
+          <!-- Card 3: SaveSphere -->
+          <article class="service-card fade-up" data-delay="3">
+            <div class="service-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <span class="service-card__tag">Blockchain Storage</span>
+            <h3 class="service-card__title">SaveSphere</h3>
+            <p class="service-card__description">
+              ブロックチェーン技術で大切な思い出を永久に記録。サービス終了後もデータを確実に残し、
+              ユーザーの記憶を未来へと繋げます。
             </p>
-            <a href="/business#ai-workforce" class="biz-card__link">詳しく見る</a>
+            <a href="#contact" class="service-card__link">詳しく見る</a>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== APPROACH SECTION ===== -->
+    <section id="approach" class="section section--lg approach fade-up">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-header__label" style="color: var(--color-accent-light);">Approach</span>
+          <h2 class="section-header__title" style="color: var(--color-text-inverse);">AI &times; Human Quality</h2>
+          <p class="section-header__description" style="color: var(--color-text-tertiary);">
+            AIのコーディングは速い。でも、本当に信頼できますか？<br>
+            私たちは、速さと品質を両立します。
+          </p>
+        </div>
+
+        <div class="approach__grid">
+          <div class="approach__card fade-up" data-delay="1">
+            <p class="approach__card-label">Human Side</p>
+            <h3 class="approach__card-title">人間の役割</h3>
+            <ul class="approach__card-list">
+              <li class="approach__card-item">戦略立案・要件定義</li>
+              <li class="approach__card-item">品質管理・コードレビュー</li>
+              <li class="approach__card-item">安全性確保・セキュリティ</li>
+              <li class="approach__card-item">ユーザー体験の設計</li>
+            </ul>
+          </div>
+          <div class="approach__card fade-up" data-delay="2">
+            <p class="approach__card-label">AI Side</p>
+            <h3 class="approach__card-title">AIの役割</h3>
+            <ul class="approach__card-list">
+              <li class="approach__card-item">高速コーディング・実装</li>
+              <li class="approach__card-item">24時間365日の稼働</li>
+              <li class="approach__card-item">大規模スケール対応</li>
+              <li class="approach__card-item">データ分析・パターン認識</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ===== NEWS SECTION ===== -->
-    <section class="section fade-up">
+    <section id="news" class="section fade-up">
       <div class="container">
         <div class="section-header section-header--left">
           <span class="section-header__label">News</span>
@@ -162,83 +214,89 @@
         </div>
 
         <div class="news-list">
-          <a href="/news/20260318/" class="news-item">
+          <a href="#" class="news-item">
             <div class="news-item__meta">
-              <time class="news-item__date" datetime="2026-03-18">2026.03.18</time>
-              <span class="news-item__category">プレスリリース</span>
+              <time class="news-item__date" datetime="2023-10-01">2023.10.01</time>
+              <span class="news-item__category">資金調達</span>
             </div>
-            <p class="news-item__title">LayerX、ARR100億円を達成——AIエージェント事業が成長を牽引</p>
+            <p class="news-item__title">SoulBound Tokensにより"イベントグッズ"をDX化する「Mintice」のwizOnChain、ANRIなどから5,000万円の資金調達を実施</p>
           </a>
 
-          <a href="/news/20250901/" class="news-item">
+          <a href="#" class="news-item">
             <div class="news-item__meta">
-              <time class="news-item__date" datetime="2025-09-01">2025.09.01</time>
-              <span class="news-item__category">プレスリリース</span>
+              <time class="news-item__date" datetime="2023-12-01">2023.12.01</time>
+              <span class="news-item__category">サービス</span>
             </div>
-            <p class="news-item__title">LayerX、シリーズBで150億円を調達。エンジニアの採用を強化し、AIエージェント事業をさらに加速</p>
+            <p class="news-item__title">ANIMAX MUSIX 2023にてデジタルイベントグッズ「Mintice」の公式Mintを発売</p>
           </a>
 
-          <a href="/news/20250801/" class="news-item">
+          <a href="#" class="news-item">
             <div class="news-item__meta">
-              <time class="news-item__date" datetime="2025-08-01">2025.08.01</time>
-              <span class="news-item__category">お知らせ</span>
+              <time class="news-item__date" datetime="2024-01-15">2024.01.15</time>
+              <span class="news-item__category">メディア</span>
             </div>
-            <p class="news-item__title">LayerX、採用サイトをリニューアルし多様な人材との接点を強化</p>
-          </a>
-
-          <a href="/news/20250401/" class="news-item">
-            <div class="news-item__meta">
-              <time class="news-item__date" datetime="2025-04-01">2025.04.01</time>
-              <span class="news-item__category">お知らせ</span>
-            </div>
-            <p class="news-item__title">行動指針を「Bet Technology」から「Bet AI」にアップデート</p>
+            <p class="news-item__title">AWS Startup ブログにて、カスタム認証機能の実装事例が紹介されました</p>
           </a>
         </div>
 
-        <div style="text-align: center; margin-top: var(--space-xl);">
-          <a href="/news" class="btn--more">ニュース一覧</a>
+        <div style="text-align: left; margin-top: var(--space-xl);">
+          <a href="#" class="btn--more">ニュース一覧</a>
         </div>
       </div>
     </section>
 
-    <!-- ===== CULTURE SECTION ===== -->
-    <section class="section section--gray fade-up">
+    <!-- ===== COMPANY SECTION ===== -->
+    <section id="company" class="section section--gray fade-up">
       <div class="container">
-        <div class="section-header">
-          <span class="section-header__label">Culture</span>
-          <h2 class="section-header__title">はたらく人々</h2>
-          <p class="section-header__description">
-            誠実さや信頼性を大切にし、対話的でオープンな社風。
-            人とのつながりから希望あふれる優しいデジタル社会を目指しています。
-          </p>
+        <div class="section-header section-header--left">
+          <span class="section-header__label">Company</span>
+          <h2 class="section-header__title">会社概要</h2>
         </div>
 
-        <div class="culture__grid">
-          <!-- Placeholder images - replace with actual photos -->
-          <div class="culture__image">
-            <img src="https://placehold.co/600x375/eef0f4/555555?text=Office+Photo+1" alt="オフィスでの働く様子" loading="lazy">
+        <div class="company-info">
+          <div class="company-info__item">
+            <span class="company-info__label">会社名</span>
+            <span class="company-info__value">wizOnChain株式会社</span>
           </div>
-          <div class="culture__image">
-            <img src="https://placehold.co/600x375/eef0f4/555555?text=Team+Meeting" alt="チームミーティング" loading="lazy">
+          <div class="company-info__item">
+            <span class="company-info__label">設立</span>
+            <span class="company-info__value">2023年4月</span>
           </div>
-          <div class="culture__image">
-            <img src="https://placehold.co/600x375/eef0f4/555555?text=Collaboration" alt="コラボレーション" loading="lazy">
+          <div class="company-info__item">
+            <span class="company-info__label">代表取締役CEO</span>
+            <span class="company-info__value">金下 裕平</span>
+          </div>
+          <div class="company-info__item">
+            <span class="company-info__label">所在地</span>
+            <span class="company-info__value">東京都港区六本木六丁目10-1<br>六本木ヒルズ森タワー15F CIRCLE by ANRI</span>
+          </div>
+          <div class="company-info__item">
+            <span class="company-info__label">事業内容</span>
+            <span class="company-info__value">AIエージェント構築、デジタルグッズプラットフォーム、ブロックチェーン記録保存サービス</span>
+          </div>
+          <div class="company-info__item">
+            <span class="company-info__label">メンバー数</span>
+            <span class="company-info__value">27名</span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ===== CTA SECTION ===== -->
-    <section class="section section--lg cta fade-up">
+    <section id="contact" class="section section--lg cta fade-up">
+      <div class="cta__bg-orb cta__bg-orb--1" aria-hidden="true"></div>
+      <div class="cta__bg-orb cta__bg-orb--2" aria-hidden="true"></div>
       <div class="container">
-        <h2 class="cta__title">一緒に未来を実装しませんか</h2>
-        <p class="cta__text">
-          LayerXでは、ミッションに共感し、
-          テクノロジーで社会課題を解決したいメンバーを募集しています。
-        </p>
-        <div class="cta__buttons">
-          <a href="/careers" class="btn btn--primary">採用情報を見る</a>
-          <a href="/contact" class="btn btn--outline">お問い合わせ</a>
+        <div class="cta__content">
+          <h2 class="cta__title">AIの力で、ビジネスを加速する</h2>
+          <p class="cta__text">
+            AIエージェントの導入や、ブロックチェーンを活用した
+            プロダクト開発について、お気軽にご相談ください。
+          </p>
+          <div class="cta__buttons">
+            <a href="mailto:info@wizonchain.com" class="btn btn--primary">お問い合わせ</a>
+            <a href="#services" class="btn btn--outline">サービス詳細</a>
+          </div>
         </div>
       </div>
     </section>
@@ -250,38 +308,34 @@
       <div class="footer__inner">
         <div class="footer__top">
           <div>
-            <div class="footer__logo">LayerX</div>
-            <p style="font-size: var(--font-size-small); color: rgba(255,255,255,0.5); margin-top: var(--space-sm);">
-              すべての経済活動を、デジタル化する。
-            </p>
-            <div class="footer__social" style="margin-top: var(--space-lg);">
-              <a href="https://x.com/LayerXcom" class="footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener">𝕏</a>
-              <a href="https://note.layerx.co.jp/" class="footer__social-link" aria-label="note" target="_blank" rel="noopener">n</a>
-              <a href="https://www.linkedin.com/company/layerx/" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">in</a>
+            <div class="footer__logo">wizOnChain</div>
+            <p class="footer__tagline">AIに仕事をさせよう。</p>
+            <div class="footer__social">
+              <a href="https://x.com/wizOnChain" class="footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener">&#x1D54F;</a>
+              <a href="https://www.linkedin.com/company/wizonchain/" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">in</a>
+              <a href="https://sg.wantedly.com/companies/company_7075312" class="footer__social-link" aria-label="Wantedly" target="_blank" rel="noopener">W</a>
             </div>
           </div>
 
           <nav class="footer__nav" aria-label="フッターナビゲーション">
             <div>
-              <p class="footer__nav-group-title">About</p>
-              <a href="/about" class="footer__nav-link">ミッション</a>
-              <a href="/about/company" class="footer__nav-link">会社概要</a>
+              <p class="footer__nav-group-title">Services</p>
+              <a href="#services" class="footer__nav-link">AIエージェント構築</a>
+              <a href="#services" class="footer__nav-link">Mintice</a>
+              <a href="#services" class="footer__nav-link">SaveSphere</a>
             </div>
             <div>
-              <p class="footer__nav-group-title">Business</p>
-              <a href="/business#bakuraku" class="footer__nav-link">バクラク</a>
-              <a href="/business#fintech" class="footer__nav-link">Fintech事業</a>
-              <a href="/business#ai-workforce" class="footer__nav-link">Ai Workforce</a>
+              <p class="footer__nav-group-title">Company</p>
+              <a href="#company" class="footer__nav-link">会社概要</a>
+              <a href="#news" class="footer__nav-link">ニュース</a>
             </div>
             <div>
-              <p class="footer__nav-group-title">Information</p>
-              <a href="/news" class="footer__nav-link">ニュース</a>
-              <a href="/presskit" class="footer__nav-link">プレスキット</a>
+              <p class="footer__nav-group-title">Careers</p>
+              <a href="https://sg.wantedly.com/companies/company_7075312" class="footer__nav-link" target="_blank" rel="noopener">採用情報</a>
             </div>
             <div>
               <p class="footer__nav-group-title">Contact</p>
-              <a href="/careers" class="footer__nav-link">採用情報</a>
-              <a href="/contact" class="footer__nav-link">お問い合わせ</a>
+              <a href="#contact" class="footer__nav-link">お問い合わせ</a>
             </div>
           </nav>
         </div>
@@ -290,9 +344,8 @@
           <div class="footer__legal">
             <a href="/privacy" class="footer__legal-link">プライバシーポリシー</a>
             <a href="/terms" class="footer__legal-link">利用規約</a>
-            <a href="/security" class="footer__legal-link">情報セキュリティ</a>
           </div>
-          <p class="footer__copyright">&copy; LayerX Inc.</p>
+          <p class="footer__copyright">&copy; 2023 wizOnChain Inc. All rights reserved.</p>
         </div>
       </div>
     </div>
