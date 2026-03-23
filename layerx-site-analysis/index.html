@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>株式会社LayerX</title>
+  <meta name="description" content="すべての経済活動を、デジタル化する。LayerXはAI SaaS事業「バクラク」「Ai Workforce」、AI DX事業を提供しています。">
+
+  <!-- OGP -->
+  <meta property="og:title" content="株式会社LayerX">
+  <meta property="og:description" content="すべての経済活動を、デジタル化する。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://layerx.co.jp/">
+  <meta property="og:site_name" content="株式会社LayerX">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="src/css/variables.css">
+  <link rel="stylesheet" href="src/css/reset.css">
+  <link rel="stylesheet" href="src/css/layout.css">
+  <link rel="stylesheet" href="src/css/components.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <a href="/" class="header__logo" aria-label="LayerX ホーム">
+        <!-- Logo: Replace with actual SVG -->
+        <svg width="120" height="28" viewBox="0 0 120 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="4" fill="#2d3047"/>
+          <text x="36" y="20" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#2d3047">LayerX</text>
+        </svg>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="header__nav" aria-label="メインナビゲーション">
+        <ul class="header__nav-list">
+          <li><a href="/about" class="header__nav-link">私たちについて</a></li>
+          <li><a href="/business" class="header__nav-link">事業内容</a></li>
+          <li><a href="/news" class="header__nav-link">ニュース</a></li>
+          <li><a href="/careers" class="header__nav-link">採用情報</a></li>
+        </ul>
+      </nav>
+
+      <a href="/contact" class="btn btn--primary btn--small header__cta">お問い合わせ</a>
+
+      <!-- Mobile Menu Button -->
+      <button class="header__menu-btn" aria-label="メニューを開く" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" aria-label="モバイルナビゲーション">
+    <a href="/about" class="mobile-menu__link">私たちについて</a>
+    <a href="/business" class="mobile-menu__link">事業内容</a>
+    <a href="/news" class="mobile-menu__link">ニュース</a>
+    <a href="/careers" class="mobile-menu__link">採用情報</a>
+    <a href="/contact" class="mobile-menu__link">お問い合わせ</a>
+  </div>
+
+  <main>
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__bg-layer"></div>
+        <div class="hero__bg-layer"></div>
+        <div class="hero__bg-layer"></div>
+      </div>
+      <div class="hero__content">
+        <h1 class="hero__title">すべての経済活動を、<br>デジタル化する。</h1>
+        <p class="hero__subtitle">
+          仕事や暮らしの中にある摩擦が解消され、それぞれの創造力が発揮されている。
+          そんな希望あふれる優しいデジタル社会を、未来に残していくために。
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== MISSION SECTION ===== -->
+    <section class="section section--lg mission fade-up">
+      <div class="container">
+        <p class="mission__lead">
+          ⼈類の未来をより良くする。
+        </p>
+        <p class="mission__text">
+          そのために私たちは、テクノロジーの可能性を探求し、
+          経済活動における複雑で⼤きな課題に挑む。
+          ソフトウェアや機械学習の力によって、人々の行動を変え、社会課題を解決する。
+          そのために、複数事業・プロダクトを同時並行的に展開する
+          「コンパウンド・スタートアップ」としての挑戦を続けています。
+        </p>
+        <div style="text-align: center; margin-top: var(--space-xl);">
+          <a href="/about" class="btn--more">私たちについて詳しく</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BUSINESS SECTION ===== -->
+    <section class="section section--gray fade-up">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-header__label">Business</span>
+          <h2 class="section-header__title">事業内容</h2>
+          <p class="section-header__description">
+            ソフトウェアの力で日本の社会課題を解決し、
+            人々の創造力がより発揮されるプロダクトを提供しています。
+          </p>
+        </div>
+
+        <div class="grid grid--3">
+          <!-- Card 1: バクラク -->
+          <article class="biz-card fade-up">
+            <div class="biz-card__icon">📋</div>
+            <h3 class="biz-card__title">バクラク</h3>
+            <p class="biz-card__description">
+              稟議・経費精算・法人カード・請求書受取・請求書発行・勤怠管理等を効率化するAIクラウドサービス。
+              バックオフィス業務に特化したAIエージェントも提供。
+            </p>
+            <a href="/business#bakuraku" class="biz-card__link">詳しく見る</a>
+          </article>
+
+          <!-- Card 2: Fintech -->
+          <article class="biz-card fade-up">
+            <div class="biz-card__icon">💎</div>
+            <h3 class="biz-card__title">Fintech事業</h3>
+            <p class="biz-card__description">
+              三井物産デジタル・アセットマネジメントとして、
+              デジタルネイティブなアセットマネジメント会社を目指す合弁事業。
+            </p>
+            <a href="/business#fintech" class="biz-card__link">詳しく見る</a>
+          </article>
+
+          <!-- Card 3: Ai Workforce -->
+          <article class="biz-card fade-up">
+            <div class="biz-card__icon">🤖</div>
+            <h3 class="biz-card__title">Ai Workforce</h3>
+            <p class="biz-card__description">
+              大規模言語モデル（LLM）関連技術を活用し、
+              ワークフロー構築やナレッジ共有等の業務支援を行うAIプラットフォーム。
+            </p>
+            <a href="/business#ai-workforce" class="biz-card__link">詳しく見る</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEWS SECTION ===== -->
+    <section class="section fade-up">
+      <div class="container">
+        <div class="section-header section-header--left">
+          <span class="section-header__label">News</span>
+          <h2 class="section-header__title">ニュース</h2>
+        </div>
+
+        <div class="news-list">
+          <a href="/news/20260318/" class="news-item">
+            <div class="news-item__meta">
+              <time class="news-item__date" datetime="2026-03-18">2026.03.18</time>
+              <span class="news-item__category">プレスリリース</span>
+            </div>
+            <p class="news-item__title">LayerX、ARR100億円を達成——AIエージェント事業が成長を牽引</p>
+          </a>
+
+          <a href="/news/20250901/" class="news-item">
+            <div class="news-item__meta">
+              <time class="news-item__date" datetime="2025-09-01">2025.09.01</time>
+              <span class="news-item__category">プレスリリース</span>
+            </div>
+            <p class="news-item__title">LayerX、シリーズBで150億円を調達。エンジニアの採用を強化し、AIエージェント事業をさらに加速</p>
+          </a>
+
+          <a href="/news/20250801/" class="news-item">
+            <div class="news-item__meta">
+              <time class="news-item__date" datetime="2025-08-01">2025.08.01</time>
+              <span class="news-item__category">お知らせ</span>
+            </div>
+            <p class="news-item__title">LayerX、採用サイトをリニューアルし多様な人材との接点を強化</p>
+          </a>
+
+          <a href="/news/20250401/" class="news-item">
+            <div class="news-item__meta">
+              <time class="news-item__date" datetime="2025-04-01">2025.04.01</time>
+              <span class="news-item__category">お知らせ</span>
+            </div>
+            <p class="news-item__title">行動指針を「Bet Technology」から「Bet AI」にアップデート</p>
+          </a>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-xl);">
+          <a href="/news" class="btn--more">ニュース一覧</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CULTURE SECTION ===== -->
+    <section class="section section--gray fade-up">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-header__label">Culture</span>
+          <h2 class="section-header__title">はたらく人々</h2>
+          <p class="section-header__description">
+            誠実さや信頼性を大切にし、対話的でオープンな社風。
+            人とのつながりから希望あふれる優しいデジタル社会を目指しています。
+          </p>
+        </div>
+
+        <div class="culture__grid">
+          <!-- Placeholder images - replace with actual photos -->
+          <div class="culture__image">
+            <img src="https://placehold.co/600x375/eef0f4/555555?text=Office+Photo+1" alt="オフィスでの働く様子" loading="lazy">
+          </div>
+          <div class="culture__image">
+            <img src="https://placehold.co/600x375/eef0f4/555555?text=Team+Meeting" alt="チームミーティング" loading="lazy">
+          </div>
+          <div class="culture__image">
+            <img src="https://placehold.co/600x375/eef0f4/555555?text=Collaboration" alt="コラボレーション" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA SECTION ===== -->
+    <section class="section section--lg cta fade-up">
+      <div class="container">
+        <h2 class="cta__title">一緒に未来を実装しませんか</h2>
+        <p class="cta__text">
+          LayerXでは、ミッションに共感し、
+          テクノロジーで社会課題を解決したいメンバーを募集しています。
+        </p>
+        <div class="cta__buttons">
+          <a href="/careers" class="btn btn--primary">採用情報を見る</a>
+          <a href="/contact" class="btn btn--outline">お問い合わせ</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__top">
+          <div>
+            <div class="footer__logo">LayerX</div>
+            <p style="font-size: var(--font-size-small); color: rgba(255,255,255,0.5); margin-top: var(--space-sm);">
+              すべての経済活動を、デジタル化する。
+            </p>
+            <div class="footer__social" style="margin-top: var(--space-lg);">
+              <a href="https://x.com/LayerXcom" class="footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener">𝕏</a>
+              <a href="https://note.layerx.co.jp/" class="footer__social-link" aria-label="note" target="_blank" rel="noopener">n</a>
+              <a href="https://www.linkedin.com/company/layerx/" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">in</a>
+            </div>
+          </div>
+
+          <nav class="footer__nav" aria-label="フッターナビゲーション">
+            <div>
+              <p class="footer__nav-group-title">About</p>
+              <a href="/about" class="footer__nav-link">ミッション</a>
+              <a href="/about/company" class="footer__nav-link">会社概要</a>
+            </div>
+            <div>
+              <p class="footer__nav-group-title">Business</p>
+              <a href="/business#bakuraku" class="footer__nav-link">バクラク</a>
+              <a href="/business#fintech" class="footer__nav-link">Fintech事業</a>
+              <a href="/business#ai-workforce" class="footer__nav-link">Ai Workforce</a>
+            </div>
+            <div>
+              <p class="footer__nav-group-title">Information</p>
+              <a href="/news" class="footer__nav-link">ニュース</a>
+              <a href="/presskit" class="footer__nav-link">プレスキット</a>
+            </div>
+            <div>
+              <p class="footer__nav-group-title">Contact</p>
+              <a href="/careers" class="footer__nav-link">採用情報</a>
+              <a href="/contact" class="footer__nav-link">お問い合わせ</a>
+            </div>
+          </nav>
+        </div>
+
+        <div class="footer__bottom">
+          <div class="footer__legal">
+            <a href="/privacy" class="footer__legal-link">プライバシーポリシー</a>
+            <a href="/terms" class="footer__legal-link">利用規約</a>
+            <a href="/security" class="footer__legal-link">情報セキュリティ</a>
+          </div>
+          <p class="footer__copyright">&copy; LayerX Inc.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="src/js/main.js"></script>
+</body>
+</html>
