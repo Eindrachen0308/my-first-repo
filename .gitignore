@@ -1,4 +1,24 @@
+# Node / Next.js (legacy from prior dashboard)
 node_modules/
 .next/
 package.json
 package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Generated artifacts
+*.docx
+*.pdf
+
+# Environment / secrets
+.env
+.env.*
+
+# Claude Code (local overrides only; team-shared configs are committed)
+.claude/settings.local.json
+.claude/cache/
+CLAUDE.local.md

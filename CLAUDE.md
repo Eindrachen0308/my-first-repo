@@ -1,13 +1,30 @@
-# Project Preferences
+# Repository Guide
 
-## Routine Tasks
+## What this repo is
+A small Python utility repository. The current contents:
 
-### AI/ロボティクス動向ダイジェスト（メール配信）
-- **送付先**: d.and.f.ca@gmail.com
-- **形式**: Gmail下書きを作成（mcp__Gmail__create_draft）
-- **内容構成**:
-  - 技術トピック 3件（Physical AI / ヒューマノイド / AI・AGI / 自動運転 から）
-  - 論文・研究トピック 3件
-  - 企業リリース 2件
-- **海外:国内の比率**: 8:2（概ね 6〜7件を海外、1〜2件を国内）
-- **各項目に出典URLを明記**
+- `generate_jd_docx.py` — Generates a Word (`.docx`) document containing job descriptions (Backend / ML / MLOps engineer roles) using `python-docx`.
+
+## How to run
+
+```bash
+pip install python-docx
+python3 generate_jd_docx.py
+```
+
+The script writes a `.docx` file into the current working directory.
+
+## Conventions
+- Python 3, standard library + `python-docx` only unless a new dependency is justified.
+- Keep scripts self-contained and runnable with a single `python3 <file>.py` invocation.
+- Output files (`.docx`, `.pdf`, etc.) should not be committed — they are build artifacts.
+
+## Git workflow
+- Default branch: `master`.
+- Web-session work uses `claude/<topic>-<slug>` branches.
+- Every change is committed and pushed before the session ends (enforced by the user-level Stop hook).
+
+## Claude Code setup
+- Project settings: `.claude/settings.json` (permission allowlist).
+- Subagents: `.claude/agents/` (e.g. `code-reviewer`).
+- Personal routines (e.g. AI digest email) live in `~/.claude/` — **not** in this repo.
