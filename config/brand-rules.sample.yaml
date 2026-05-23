@@ -1,0 +1,192 @@
+# Brand Rules (ルールベース自動チェック辞書) — テンプレート
+#
+# このファイルは、以下の起点に使用されます:
+#   1. Notion の `Brand Rules` DB 初期データとして投入
+#   2. Worker のルールチェックエンジンから直接ロードして実行 (Notion 同期前のフォールバック)
+#
+# 運用ループ:
+#   - 人間レビューで判断した事例は、その場で Notion の `Brand Rules` に追加
+#   - 月次で本 YAML に書き戻し、Git で履歴管理
+#
+# スキーマ:
+#   - name:        ルール識別子 (ユニーク)
+#   - category:    forbidden | typo | numeric | trademark | person | pii
+#   - pattern:     検出対象 (正規表現 or 完全一致)
+#   - pattern_type: regex | literal (デフォルト literal)
+#   - replacement: (任意) 自動置換後の文字列。指定時は severity=info でも置換する
+#   - severity:    block | warn | info
+#   - active:      true/false
+#   - note:        追加理由・備考
+
+version: 0.1
+
+rules:
+
+  # ========================================
+  # Category: forbidden — 強制停止
+  # ========================================
+
+  - name: unreleased_product_codename_alpha
+    category: forbidden
+    pattern: "プロジェクト[A-Z]\\b"
+    pattern_type: regex
+    severity: block
+    active: true
+    note: "未発表プロダクトのコードネーム。収録で言及があった場合は公開前に編集カット"
+
+  - name: confidential_revenue_forecast
+    category: forbidden
+    pattern: "(業績予想|売上予想|来期見込み)"
+    pattern_type: regex
+    severity: block
+    active: true
+    note: "未開示の財務予想は IR 前に出してはいけない"
+
+  - name: lawsuit_mention
+    category: forbidden
+    pattern: "(訴訟|係争|和解金)"
+    pattern_type: regex
+    severity: block
+    active: true
+    note: "係争中の案件。法務確認必須"
+
+  # ========================================
+  # Category: typo — 表記ゆれ自動修正
+  # ========================================
+
+  - name: typo_generative_ai
+    category: typo
+    pattern: "Generative AI"
+    pattern_type: literal
+    replacement: "生成AI"
+    severity: info
+    active: true
+    note: "日本語記事では「生成AI」に統一"
+
+  - name: typo_llm_spacing
+    category: typo
+    pattern: "L L M"
+    pattern_type: literal
+    replacement: "LLM"
+    severity: info
+    active: true
+
+  - name: typo_youtube_casing
+    category: typo
+    pattern: "(?i)youtube"
+    pattern_type: regex
+    replacement: "YouTube"
+    severity: info
+    active: true
+    note: "大文字小文字の統一"
+
+  - name: typo_github_casing
+    category: typo
+    pattern: "(?i)github"
+    pattern_type: regex
+    replacement: "GitHub"
+    severity: info
+    active: true
+
+  - name: typo_notion_casing
+    category: typo
+    pattern: "(?i)notion(?!-)"
+    pattern_type: regex
+    replacement: "Notion"
+    severity: info
+    active: true
+
+  # ========================================
+  # Category: numeric — 数字主張は根拠必須
+  # ========================================
+
+  - name: percent_growth_claim
+    category: numeric
+    pattern: "\\d+(\\.\\d+)?%(増|成長|向上|改善)"
+    pattern_type: regex
+    severity: warn
+    active: true
+    note: "出典URLを本文または Notion の Show Notes に記載のこと"
+
+  - name: company_count_claim
+    category: numeric
+    pattern: "\\d+社(導入|採用|利用)"
+    pattern_type: regex
+    severity: warn
+    active: true
+    note: "実績社数は事実確認必須"
+
+  - name: user_count_claim
+    category: numeric
+    pattern: "\\d+(万|億)(人|ユーザー)"
+    pattern_type: regex
+    severity: warn
+    active: true
+
+  - name: market_share_claim
+    category: numeric
+    pattern: "(シェア|市場占有率)\\s*\\d+%"
+    pattern_type: regex
+    severity: warn
+    active: true
+    note: "市場シェアの数字は第三者ソースが必要"
+
+  # ========================================
+  # Category: trademark — 商標記号の統一
+  # ========================================
+
+  - name: trademark_claude
+    category: trademark
+    pattern: "Claude(?!®)"
+    pattern_type: regex
+    severity: info
+    replacement: "Claude"
+    active: false  # 自社が Anthropic 公認パートナー等でなければ無理に付けない
+    note: "商標記号の要否はケースバイケース"
+
+  # ========================================
+  # Category: person — 人物言及のマスキング
+  # ========================================
+
+  - name: employee_realname_sample
+    category: person
+    pattern: "山田太郎"  # 実運用では社員名簿から動的生成
+    pattern_type: literal
+    replacement: "当社エンジニア"
+    severity: warn
+    active: true
+    note: "社員実名は肩書き置換が原則。実名で出す場合は本人同意を得て rule を無効化"
+
+  # ========================================
+  # Category: pii — 個人情報パターン
+  # ========================================
+
+  - name: pii_phone_jp
+    category: pii
+    pattern: "0\\d{1,4}-\\d{1,4}-\\d{4}"
+    pattern_type: regex
+    severity: block
+    active: true
+    note: "日本の電話番号形式"
+
+  - name: pii_email
+    category: pii
+    pattern: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    pattern_type: regex
+    severity: block
+    active: true
+
+  - name: pii_credit_card
+    category: pii
+    pattern: "\\b(?:\\d{4}[- ]?){3}\\d{4}\\b"
+    pattern_type: regex
+    severity: block
+    active: true
+
+  - name: pii_mynumber
+    category: pii
+    pattern: "\\b\\d{4}\\s?\\d{4}\\s?\\d{4}\\b"
+    pattern_type: regex
+    severity: warn
+    active: true
+    note: "マイナンバー形式の疑いあり。誤検知多いので warn"
