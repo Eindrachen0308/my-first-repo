@@ -182,7 +182,10 @@ async function runMock(
   });
   await sleep(800);
 
-  const reply = isKondate ? buildKondateReply(spec) : buildTravelReply(spec, text);
+  const reply = applyMockRules(
+    spec,
+    isKondate ? buildKondateReply(spec) : buildTravelReply(spec, text),
+  );
 
   // 文字を少しずつ流してストリーミング感を出す
   for (const chunk of chunkString(reply, 6)) {
@@ -222,6 +225,26 @@ function buildKondateReply(spec: AgentSpec): string {
   });
   lines.push(`食材や気分をおしえてくれたら、もっとぴったりの案を出すよ${ex ? "😋" : "!"}`);
   return lines.join("\n");
+}
+
+// モックでも行動ルールの効果を体感できるようにする（「くむ→ためす」ループの担保）
+function applyMockRules(spec: AgentSpec, reply: string): string {
+  const thens = new Set((spec.rules ?? []).map((r) => r.then));
+  const ex = spec.emoji;
+  let out = reply;
+  if (thens.has("praise")) {
+    out = `そのしつもん、いいね！${ex ? "💖" : ""}\n\n${out}`;
+  }
+  if (thens.has("reason")) {
+    out += `\n\nちなみに理由はね、みんなの口コミ評価が高くて、いま行きやすい（作りやすい）からだよ${ex ? "🧠" : "!"}`;
+  }
+  if (thens.has("advice")) {
+    out += `\n\n${ex ? "💡 " : ""}アドバイス: 早めに予定を決めると、もっと楽しめるよ！`;
+  }
+  if (thens.has("question")) {
+    out += `\n\nきみはどれが気になった？${ex ? "❓" : ""}`;
+  }
+  return out;
 }
 
 function chunkString(s: string, size: number): string[] {

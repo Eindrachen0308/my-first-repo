@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { AVATARS, PERSONAS, SKILLS } from "@/lib/presets";
+import { AVATARS, PERSONAS, RULE_THENS, RULE_WHENS, SKILLS } from "@/lib/presets";
 import type { AgentSpec } from "@/lib/types";
 
 // せっけいず: 成長パス ステージ5「よむ」。
@@ -77,6 +77,30 @@ export default function BlueprintPage() {
             </div>
           ) : (
             <p className="text-xs opacity-50">まだ装備していないよ</p>
+          )}
+        </Card>
+
+        <Card title="🧩 行動ルール">
+          {(spec.rules ?? []).length > 0 ? (
+            <div className="space-y-1">
+              {(spec.rules ?? []).map((r) => {
+                const w = RULE_WHENS.find((x) => x.id === r.when);
+                const t = RULE_THENS.find((x) => x.id === r.then);
+                return (
+                  <p key={`${r.when}-${r.then}`} className="text-xs font-bold">
+                    {w?.emoji}「{w?.label}」は {t?.emoji}「{t?.label}」
+                  </p>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-xs opacity-50">
+              （まだないよ。
+              <Link href="/rules" className="text-sky underline">
+                ルールカード
+              </Link>
+              で組めるよ）
+            </p>
           )}
         </Card>
 

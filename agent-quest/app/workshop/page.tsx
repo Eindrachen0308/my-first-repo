@@ -212,6 +212,12 @@ export default function WorkshopPage() {
                 💡 {c}
               </button>
             ))}
+            <Link
+              href="/rules"
+              className="mt-1 rounded-2xl border-2 border-dashed border-sky/40 px-4 py-3 text-center text-sm font-bold text-sky transition active:scale-95"
+            >
+              🧩 「〜のときは〜する」を組むならルールカードへ →
+            </Link>
           </div>
         )}
       </div>

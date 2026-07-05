@@ -251,6 +251,27 @@ export default function PlayPage() {
         <div ref={bottomRef} />
       </div>
 
+      {/* 改造フック: 返答をみて「直したい」と思った瞬間を改造こうぼうへつなぐ */}
+      {!running && log.some((l) => l.kind === "agent") && (
+        <div className="flex items-center gap-2 px-4 pb-2">
+          <span className="text-[11px] font-bold opacity-50">
+            🤔 思ってたのとちがう？
+          </span>
+          <a
+            href="/workshop"
+            className="rounded-full border-2 border-mint/50 bg-white px-3 py-1.5 text-[11px] font-extrabold text-mint transition active:scale-95"
+          >
+            🔧 改造する
+          </a>
+          <a
+            href="/rules"
+            className="rounded-full border-2 border-sky/50 bg-white px-3 py-1.5 text-[11px] font-extrabold text-sky transition active:scale-95"
+          >
+            🧩 ルールを組む
+          </a>
+        </div>
+      )}
+
       {/* クイックプロンプト（現在のクエストのお題） */}
       {!running && currentQuest && (
         <div className="flex flex-col gap-2 px-4 pb-2">

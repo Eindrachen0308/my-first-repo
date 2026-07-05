@@ -126,6 +126,59 @@ export const QUESTS: Quest[] = [
   },
 ];
 
+// 行動ルールカード（「〜のときは〜する」）: 条件×アクションの組み合わせ。
+// 成長パス ステージ4「くむ」— 条件分岐・イベント駆動の概念の入口。
+export const RULE_WHENS = [
+  {
+    id: "greet",
+    emoji: "👋",
+    label: "あいさつされたとき",
+    prompt: "ユーザーにあいさつされたとき",
+  },
+  {
+    id: "recommend",
+    emoji: "🌟",
+    label: "おすすめを聞かれたとき",
+    prompt: "おすすめを聞かれたとき",
+  },
+  {
+    id: "trouble",
+    emoji: "😢",
+    label: "こまっていそうなとき",
+    prompt: "ユーザーが困っていそう・落ち込んでいそうなとき",
+  },
+  { id: "always", emoji: "⭐", label: "いつも", prompt: "つねに" },
+] as const;
+
+export const RULE_THENS = [
+  {
+    id: "praise",
+    emoji: "💖",
+    label: "まずほめる",
+    prompt: "まずユーザーを一言ほめてから答える",
+  },
+  {
+    id: "reason",
+    emoji: "🧠",
+    label: "理由もセットで話す",
+    prompt: "結論だけでなく理由もセットで説明する",
+  },
+  {
+    id: "question",
+    emoji: "❓",
+    label: "さいごに質問をかえす",
+    prompt: "答えのさいごに、会話がつづく質問をひとつ返す",
+  },
+  {
+    id: "advice",
+    emoji: "💡",
+    label: "ひとことアドバイスを足す",
+    prompt: "答えのさいごに、役立つひとことアドバイスを足す",
+  },
+] as const;
+
+export const MAX_RULES = 3;
+
 // クエスト外（試遊リンクなど）での汎用ガイド
 export const GENERAL_SPECIALTY =
   "ユーザーのそうだんに、みじかく楽しくこたえてください。おでかけプランやごはんの相談がとくいです。";

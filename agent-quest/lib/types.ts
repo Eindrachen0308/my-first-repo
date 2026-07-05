@@ -7,7 +7,11 @@ export type AgentSpec = {
   emoji: boolean;
   skills: string[]; // skill id の配列（最大2スロット）
   customInstructions?: string; // 「こだわりメモ」（自由記述・改造こうぼうで育つ）
+  rules?: AgentRule[]; // 行動ルールカード（「〜のときは〜する」）
 };
+
+// 行動ルール = WHEN カード × THEN カード の組み合わせ（idで保持）
+export type AgentRule = { when: string; then: string };
 
 // 改造こうぼう: 自然言語の指示 → スペック差分（Claude Code的体験の原型）
 export type CraftChange = { label: string; before: string; after: string };
