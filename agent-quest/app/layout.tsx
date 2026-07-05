@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Agent Quest - そだてよう、じぶんのAI。",
+  title: "そだてAI - そだてよう、じぶんのAI。",
   description:
     "ゲームであそぶ感覚で、じぶんだけのAIエージェントをつくって育てるアプリ（プロトタイプ）",
 };

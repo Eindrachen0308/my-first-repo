@@ -8,7 +8,7 @@ export default function TitlePage() {
       </div>
       <div>
         <h1 className="text-4xl font-extrabold tracking-tight text-coral-dark">
-          Agent Quest
+          そだてAI
         </h1>
         <p className="mt-3 text-lg font-bold">そだてよう、じぶんのAI。</p>
         <p className="mt-2 text-sm opacity-70">

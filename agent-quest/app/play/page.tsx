@@ -5,21 +5,16 @@ import { useRouter } from "next/navigation";
 import {
   AVATARS,
   MAX_ENERGY,
-  QUICK_PROMPTS,
-  TUTORIAL_QUEST,
+  QUESTS,
   XP_PER_LEVEL,
 } from "@/lib/presets";
+import { encodeSpec } from "@/lib/share";
 import type { AgentSpec, ChatMessage, RunEvent } from "@/lib/types";
+import { LogRow, TypingDots, type LogItem } from "@/components/RunLog";
 
-// チャットログに表示する要素（メッセージ＋戦闘ログ風の実行イベント）
-type LogItem =
-  | { kind: "user"; text: string }
-  | { kind: "agent"; text: string; streaming: boolean }
-  | { kind: "thought"; text: string }
-  | { kind: "skill"; label: string; query?: string }
-  | { kind: "skill_result"; label: string };
+type Progress = { xp: number; energy: number; cleared: string[] };
 
-type Progress = { xp: number; energy: number; questDone: boolean };
+const DEFAULT_PROGRESS: Progress = { xp: 0, energy: MAX_ENERGY, cleared: [] };
 
 export default function PlayPage() {
   const router = useRouter();
@@ -28,13 +23,11 @@ export default function PlayPage() {
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [running, setRunning] = useState(false);
-  const [progress, setProgress] = useState<Progress>({
-    xp: 0,
-    energy: MAX_ENERGY,
-    questDone: false,
-  });
+  const [progress, setProgress] = useState<Progress>(DEFAULT_PROGRESS);
   const [xpToast, setXpToast] = useState<number | null>(null);
-  const [showClear, setShowClear] = useState(false);
+  const [clearedQuestId, setClearedQuestId] = useState<string | null>(null);
+  const [showShare, setShowShare] = useState(false);
+  const [copied, setCopied] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,7 +38,11 @@ export default function PlayPage() {
     }
     setSpec(JSON.parse(raw));
     const p = localStorage.getItem("agent-quest:progress");
-    if (p) setProgress(JSON.parse(p));
+    if (p) {
+      const parsed = JSON.parse(p);
+      // 旧フォーマット（questDone）からの移行も兼ねてデフォルトで埋める
+      setProgress({ ...DEFAULT_PROGRESS, ...parsed, cleared: parsed.cleared ?? [] });
+    }
   }, [router]);
 
   useEffect(() => {
@@ -62,6 +59,24 @@ export default function PlayPage() {
   const avatar = AVATARS.find((a) => a.id === spec.avatarId) ?? AVATARS[0];
   const level = Math.floor(progress.xp / XP_PER_LEVEL) + 1;
   const xpInLevel = progress.xp % XP_PER_LEVEL;
+  const currentQuest = QUESTS.find((q) => !progress.cleared.includes(q.id));
+  const clearedQuest = QUESTS.find((q) => q.id === clearedQuestId);
+  const nextQuest = clearedQuest
+    ? QUESTS[QUESTS.indexOf(clearedQuest) + 1]
+    : undefined;
+
+  const shareUrl = () =>
+    `${window.location.origin}/try?s=${encodeSpec(spec)}`;
+
+  const copyShareUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // クリップボード不可の環境では入力欄の全選択で代替
+    }
+  };
 
   const send = async (text: string) => {
     if (running || !text.trim() || progress.energy <= 0) return;
@@ -74,12 +89,15 @@ export default function PlayPage() {
     setLog((l) => [...l, { kind: "user", text: userMsg.content }]);
 
     let agentText = "";
-    let gotDone = false;
     try {
       const res = await fetch("/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ spec, messages: newHistory }),
+        body: JSON.stringify({
+          spec,
+          messages: newHistory,
+          questId: currentQuest?.id,
+        }),
       });
       if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
 
@@ -117,17 +135,20 @@ export default function PlayPage() {
               return [...l, { kind: "agent", text: agentText, streaming: true }];
             });
           } else if (ev.type === "done") {
-            gotDone = true;
-            const newXp = progress.xp + ev.xp;
-            const firstClear = !progress.questDone;
+            const firstClear = currentQuest !== undefined;
+            const bonus = firstClear ? currentQuest.xp : 0;
             saveProgress({
-              xp: newXp + (firstClear ? TUTORIAL_QUEST.xp : 0),
+              xp: progress.xp + ev.xp + bonus,
               energy: progress.energy - 1,
-              questDone: true,
+              cleared: firstClear
+                ? [...progress.cleared, currentQuest.id]
+                : progress.cleared,
             });
-            setXpToast(ev.xp + (firstClear ? TUTORIAL_QUEST.xp : 0));
+            setXpToast(ev.xp + bonus);
             setTimeout(() => setXpToast(null), 2000);
-            if (firstClear) setTimeout(() => setShowClear(true), 800);
+            if (firstClear) {
+              setTimeout(() => setClearedQuestId(currentQuest.id), 800);
+            }
           } else if (ev.type === "error") {
             setLog((l) => [
               ...l,
@@ -151,9 +172,6 @@ export default function PlayPage() {
       if (agentText) {
         setHistory((h) => [...h, { role: "assistant", content: agentText }]);
       }
-      if (!gotDone && !agentText) {
-        // 応答が空のまま終わった場合もエナジーは消費しない
-      }
       setRunning(false);
     }
   };
@@ -175,6 +193,13 @@ export default function PlayPage() {
             />
           </div>
         </div>
+        <button
+          onClick={() => setShowShare(true)}
+          className="rounded-full bg-sky/20 px-3 py-2 text-lg transition active:scale-95"
+          aria-label="シェア"
+        >
+          📣
+        </button>
         <div className="text-right">
           <div className="text-sm font-extrabold">
             ⚡ {progress.energy}
@@ -185,12 +210,18 @@ export default function PlayPage() {
       </header>
 
       {/* クエストバナー */}
-      {!progress.questDone && (
+      {currentQuest ? (
         <div className="mx-4 mt-3 rounded-2xl bg-lavender/25 px-4 py-3">
           <div className="text-[10px] font-bold text-lavender">
-            ⭐ {TUTORIAL_QUEST.title}
+            ⭐ {currentQuest.title}
           </div>
-          <div className="text-sm font-extrabold">{TUTORIAL_QUEST.goal}</div>
+          <div className="text-sm font-extrabold">
+            {currentQuest.emoji} {currentQuest.goal}
+          </div>
+        </div>
+      ) : (
+        <div className="mx-4 mt-3 rounded-2xl bg-sun/20 px-4 py-3 text-center text-sm font-extrabold">
+          🏆 クエストぜんぶクリア！つぎのクエストをまっててね
         </div>
       )}
 
@@ -209,24 +240,14 @@ export default function PlayPage() {
         {log.map((item, i) => (
           <LogRow key={i} item={item} avatarEmoji={avatar.emoji} />
         ))}
-        {running && log[log.length - 1]?.kind === "user" && (
-          <div className="flex gap-1 pl-12">
-            {[0, 1, 2].map((d) => (
-              <span
-                key={d}
-                className="anim-dot h-2 w-2 rounded-full bg-ink/40"
-                style={{ animationDelay: `${d * 0.15}s` }}
-              />
-            ))}
-          </div>
-        )}
+        {running && log[log.length - 1]?.kind === "user" && <TypingDots />}
         <div ref={bottomRef} />
       </div>
 
-      {/* クイックプロンプト */}
-      {!running && log.length === 0 && (
+      {/* クイックプロンプト（現在のクエストのお題） */}
+      {!running && currentQuest && (
         <div className="flex flex-col gap-2 px-4 pb-2">
-          {QUICK_PROMPTS.map((q) => (
+          {currentQuest.quickPrompts.map((q) => (
             <button
               key={q}
               onClick={() => send(q)}
@@ -242,12 +263,10 @@ export default function PlayPage() {
       <div className="border-t border-ink/10 bg-white px-4 py-3">
         {progress.energy <= 0 ? (
           <p className="text-center text-sm font-bold opacity-60">
-            ⚡ エナジーがたりない！（プロトタイプ: リロードはせず、
+            ⚡ エナジーがたりない！（プロトタイプ:
             <button
               className="text-coral underline"
-              onClick={() =>
-                saveProgress({ ...progress, energy: MAX_ENERGY })
-              }
+              onClick={() => saveProgress({ ...progress, energy: MAX_ENERGY })}
             >
               ここをタップでかいふく
             </button>
@@ -289,7 +308,7 @@ export default function PlayPage() {
       )}
 
       {/* クエストクリアモーダル */}
-      {showClear && (
+      {clearedQuest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-8">
           <Confetti />
           <div className="anim-pop w-full max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl">
@@ -298,82 +317,77 @@ export default function PlayPage() {
               クエストクリア！
             </h2>
             <p className="mt-2 text-sm opacity-70">
-              {spec.name}が、はじめてのおしごとをやりとげた！
+              {clearedQuest.title}をやりとげた！
             </p>
             <p className="mt-3 text-lg font-extrabold text-sun">
-              ✨ +{TUTORIAL_QUEST.xp} XP ボーナス
+              ✨ +{clearedQuest.xp} XP ボーナス
             </p>
+            {nextQuest && (
+              <p className="mt-2 rounded-2xl bg-lavender/20 px-3 py-2 text-xs font-bold">
+                つぎは… {nextQuest.emoji} {nextQuest.title}
+              </p>
+            )}
             <button
-              onClick={() => setShowClear(false)}
-              className="mt-6 w-full rounded-full bg-coral py-3 font-extrabold text-white shadow-lg transition active:scale-95"
+              onClick={() => setClearedQuestId(null)}
+              className="mt-5 w-full rounded-full bg-coral py-3 font-extrabold text-white shadow-lg transition active:scale-95"
             >
-              つづける
+              {nextQuest ? "つぎのクエストへ" : "つづける"}
             </button>
             <button
-              onClick={() => setShowClear(false)}
+              onClick={() => {
+                setClearedQuestId(null);
+                setShowShare(true);
+              }}
               className="mt-2 w-full rounded-full bg-sky/20 py-3 text-sm font-bold text-ink/70 transition active:scale-95"
             >
-              📣 シェアする（準備中）
+              📣 ともだちに自慢する
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* シェアモーダル（試遊リンク） */}
+      {showShare && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-8"
+          onClick={() => setShowShare(false)}
+        >
+          <div
+            className="anim-pop w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-5xl">{avatar.emoji}</div>
+            <h2 className="mt-2 text-xl font-extrabold">
+              {spec.name}をシェアしよう
+            </h2>
+            <p className="mt-2 text-xs opacity-60">
+              このリンクを送ると、ともだちが
+              <br />
+              {spec.name}とおしゃべりできるよ！
+            </p>
+            <input
+              readOnly
+              value={shareUrl()}
+              onFocus={(e) => e.target.select()}
+              className="mt-4 w-full rounded-xl border-2 border-ink/10 bg-cream px-3 py-2 text-[10px]"
+            />
+            <button
+              onClick={copyShareUrl}
+              className="mt-3 w-full rounded-full bg-coral py-3 font-extrabold text-white shadow-lg transition active:scale-95"
+            >
+              {copied ? "✅ コピーした！" : "リンクをコピー"}
+            </button>
+            <button
+              onClick={() => setShowShare(false)}
+              className="mt-2 w-full rounded-full py-2 text-sm font-bold opacity-50"
+            >
+              とじる
             </button>
           </div>
         </div>
       )}
     </main>
   );
-}
-
-function LogRow({
-  item,
-  avatarEmoji,
-}: {
-  item: LogItem;
-  avatarEmoji: string;
-}) {
-  switch (item.kind) {
-    case "user":
-      return (
-        <div className="flex justify-end">
-          <div className="max-w-[80%] rounded-3xl rounded-br-md bg-coral px-4 py-3 text-sm font-bold text-white">
-            {item.text}
-          </div>
-        </div>
-      );
-    case "agent":
-      return (
-        <div className="flex items-end gap-2">
-          <span className="text-2xl">{avatarEmoji}</span>
-          <div className="max-w-[80%] whitespace-pre-wrap rounded-3xl rounded-bl-md bg-white px-4 py-3 text-sm font-bold shadow-sm">
-            {item.text}
-            {item.streaming && <span className="opacity-40">▍</span>}
-          </div>
-        </div>
-      );
-    case "thought":
-      return (
-        <div className="anim-pop pl-10 text-xs italic opacity-50">
-          💭 {item.text}
-        </div>
-      );
-    case "skill":
-      return (
-        <div className="anim-pop mx-6">
-          <div className="anim-shine rounded-2xl border-2 border-mint bg-mint/10 px-4 py-2 text-center">
-            <span className="text-sm font-extrabold text-mint">
-              🔍 {item.label}
-            </span>
-            {item.query && (
-              <span className="block text-xs opacity-60">「{item.query}」</span>
-            )}
-          </div>
-        </div>
-      );
-    case "skill_result":
-      return (
-        <div className="anim-pop text-center text-xs font-bold text-mint">
-          ✨ {item.label}
-        </div>
-      );
-  }
 }
 
 function Confetti() {

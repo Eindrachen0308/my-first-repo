@@ -10,9 +10,10 @@ export const dynamic = "force-dynamic";
 // ANTHROPIC_API_KEY があれば Claude API に実接続、なければ（またはAPIエラー時は）
 // モック実行に自動フォールバックし、デモが止まらないようにする。
 export async function POST(req: NextRequest) {
-  const { spec, messages } = (await req.json()) as {
+  const { spec, messages, questId } = (await req.json()) as {
     spec: AgentSpec;
     messages: ChatMessage[];
+    questId?: string;
   };
 
   const encoder = new TextEncoder();
@@ -23,13 +24,13 @@ export async function POST(req: NextRequest) {
       try {
         if (process.env.ANTHROPIC_API_KEY) {
           try {
-            await runWithClaude(spec, messages, emit);
+            await runWithClaude(spec, messages, questId, emit);
           } catch (err) {
             console.error("Claude API failed, falling back to mock:", err);
-            await runMock(spec, messages, emit);
+            await runMock(spec, messages, questId, emit);
           }
         } else {
-          await runMock(spec, messages, emit);
+          await runMock(spec, messages, questId, emit);
         }
       } catch (err) {
         emit({ type: "error", message: "実行中にエラーが発生しました" });
@@ -51,12 +52,13 @@ export async function POST(req: NextRequest) {
 async function runWithClaude(
   spec: AgentSpec,
   messages: ChatMessage[],
+  questId: string | undefined,
   emit: (e: RunEvent) => void,
 ) {
   const { default: Anthropic } = await import("@anthropic-ai/sdk");
   const client = new Anthropic();
 
-  emit({ type: "thought", text: "クエストのこと、考え中…" });
+  emit({ type: "thought", text: "どうこたえよう、考え中…" });
 
   const tools = spec.skills.includes("web_search")
     ? [
@@ -71,7 +73,7 @@ async function runWithClaude(
   const stream = client.messages.stream({
     model: process.env.AGENT_MODEL || "claude-sonnet-5",
     max_tokens: 1500,
-    system: buildSystemPrompt(spec),
+    system: buildSystemPrompt(spec, questId),
     messages: messages.map((m) => ({ role: m.role, content: m.content })),
     tools,
   });
@@ -129,28 +131,41 @@ const DESTINATIONS: Record<string, string[]> = {
   秩父: ["長瀞ラインくだり", "わらじカツ丼と豚みそ丼", "池袋から特急ラビューで約80分"],
 };
 
+const KONDATE: [string, string, string][] = [
+  ["ふわとろ親子丼", "小松菜のおひたし", "15分でできる時短メニュー"],
+  ["回鍋肉（ホイコーロー）", "わかめスープ", "キャベツと豚肉を大量消費"],
+  ["鮭のホイル焼き", "きのこのおみそ汁", "洗い物が少なくてラクチン"],
+];
+
 async function runMock(
   spec: AgentSpec,
   messages: ChatMessage[],
+  questId: string | undefined,
   emit: (e: RunEvent) => void,
 ) {
   const lastUser = [...messages].reverse().find((m) => m.role === "user");
   const text = lastUser?.content ?? "";
-  const dest =
-    Object.keys(DESTINATIONS).find((d) => text.includes(d)) ?? "箱根";
-  const [spot, food, access] = DESTINATIONS[dest];
-  const hasSearch = spec.skills.includes("web_search");
+  const isKondate =
+    questId === "kondate" ||
+    /献立|こんだて|ごはん|ご飯|レシピ|ばんごはん|晩ごはん|夕飯|料理|食材/.test(
+      text,
+    );
 
   await sleep(500);
-  emit({ type: "thought", text: "うーん、週末のおでかけかぁ…ワクワクする！" });
+  emit({
+    type: "thought",
+    text: isKondate
+      ? "おなかすいてきた…おいしいのを考えるぞ！"
+      : "うーん、週末のおでかけかぁ…ワクワクする！",
+  });
   await sleep(900);
 
-  if (hasSearch) {
+  if (spec.skills.includes("web_search")) {
     emit({
       type: "tool_call",
       tool: "web_search",
       label: "スキル発動！ウェブけんさく",
-      query: `${dest} 週末 日帰り おすすめ`,
+      query: isKondate ? "今週 人気 かんたん 献立" : "箱根 週末 日帰り おすすめ",
     });
     await sleep(1100);
     emit({
@@ -161,11 +176,28 @@ async function runMock(
     await sleep(700);
   }
 
-  emit({ type: "thought", text: "よさそうなプランがみえてきた…！" });
+  emit({
+    type: "thought",
+    text: isKondate ? "きまった！自信作ができたよ" : "よさそうなプランがみえてきた…！",
+  });
   await sleep(800);
 
+  const reply = isKondate ? buildKondateReply(spec) : buildTravelReply(spec, text);
+
+  // 文字を少しずつ流してストリーミング感を出す
+  for (const chunk of chunkString(reply, 6)) {
+    emit({ type: "message_delta", text: chunk });
+    await sleep(35);
+  }
+
+  emit({ type: "done", xp: XP_PER_RUN, mock: true });
+}
+
+function buildTravelReply(spec: AgentSpec, text: string): string {
+  const dest = Object.keys(DESTINATIONS).find((d) => text.includes(d)) ?? "箱根";
+  const [spot, food, access] = DESTINATIONS[dest];
   const ex = spec.emoji;
-  const reply = [
+  return [
     `${ex ? "🎒✨ " : ""}週末のおでかけなら「${dest}」がおすすめ！`,
     ``,
     `${ex ? "📍 " : "・"}見どころ: ${spot}`,
@@ -175,14 +207,21 @@ async function runMock(
     `朝はやめに出発すれば、夕方までゆっくり楽しめるよ${ex ? "☀️" : ""}`,
     `気になったら「くわしく！」って聞いてね${ex ? "💪" : "!"}`,
   ].join("\n");
+}
 
-  // 文字を少しずつ流してストリーミング感を出す
-  for (const chunk of chunkString(reply, 6)) {
-    emit({ type: "message_delta", text: chunk });
-    await sleep(35);
-  }
-
-  emit({ type: "done", xp: XP_PER_RUN, mock: true });
+function buildKondateReply(spec: AgentSpec): string {
+  const ex = spec.emoji;
+  const lines = [`${ex ? "🍳✨ " : ""}今週のばんごはん、この3つはどう？`, ``];
+  KONDATE.forEach(([main, side, point], i) => {
+    lines.push(
+      `${ex ? ["1️⃣", "2️⃣", "3️⃣"][i] : `${i + 1}.`} ${main}`,
+      `　${ex ? "🥗 " : "・"}サイド: ${side}`,
+      `　${ex ? "💡 " : "・"}ポイント: ${point}`,
+      ``,
+    );
+  });
+  lines.push(`食材や気分をおしえてくれたら、もっとぴったりの案を出すよ${ex ? "😋" : "!"}`);
+  return lines.join("\n");
 }
 
 function chunkString(s: string, size: number): string[] {
