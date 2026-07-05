@@ -193,6 +193,13 @@ export default function PlayPage() {
             />
           </div>
         </div>
+        <a
+          href="/workshop"
+          className="rounded-full bg-mint/20 px-3 py-2 text-lg transition active:scale-95"
+          aria-label="改造こうぼう"
+        >
+          🔧
+        </a>
         <button
           onClick={() => setShowShare(true)}
           className="rounded-full bg-sky/20 px-3 py-2 text-lg transition active:scale-95"
